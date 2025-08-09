@@ -7,7 +7,6 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -107,37 +106,7 @@ public class SlackService {
         if (text == null || text.isBlank()) {
             throw new IllegalArgumentException("메시지 내용이 비어있습니다.");
         }
-        String webhook = slackProperties.getWebhookUrl();
-        if (webhook != null && !webhook.isBlank()) {
-            return executeWithResilience("webhook", () -> sendViaWebhook(webhook, text, extra));
-        }
         return executeWithResilience("bot", () -> sendViaBot(channelOrName, text, extra));
-    }
-
-    private MessageResponse sendViaWebhook(String webhook, String text, Map<String, Object> extra) {
-        Duration[] waits = new Duration[]{Duration.ofMillis(200), Duration.ofMillis(500), Duration.ofMillis(1000)};
-        for (int attempt = 0; attempt < waits.length; attempt++) {
-            try {
-                Map<String, Object> body = new HashMap<>();
-                body.put("text", text);
-                if (extra != null) {
-                    if (extra.containsKey("blocks")) body.put("blocks", extra.get("blocks"));
-                    if (extra.containsKey("mrkdwn")) body.put("mrkdwn", extra.get("mrkdwn"));
-                }
-                ResponseEntity<Void> resp = RestClient.create()
-                        .post()
-                        .uri(URI.create(webhook))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(body)
-                        .retrieve()
-                        .toBodilessEntity();
-                if (resp.getStatusCode().is2xxSuccessful()) {
-                    return MessageResponse.ok("webhook", "");
-                }
-            } catch (Exception ignored) {}
-            sleep(waits[attempt]);
-        }
-        return MessageResponse.error("Webhook 전송 실패");
     }
 
     private MessageResponse sendViaBot(String channelOrName, String text, Map<String, Object> extra) {
