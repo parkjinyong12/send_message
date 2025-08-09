@@ -98,4 +98,5 @@ docker compose up -d --build
 
 ### 참고
 - 메트릭/프로메테우스: `/actuator/prometheus`
-- Swagger UI: `/swagger-ui.html` 
+- Swagger UI: `/swagger-ui.html`
+- 이 프로젝트는 Cursor로 개발되었습니다. 
