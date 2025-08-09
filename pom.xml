@@ -120,7 +120,10 @@
             <artifactId>jib-maven-plugin</artifactId>
             <version>3.4.0</version>
             <configuration>
-              <!-- mvn -Ppublish -Djib.to.image=registry/ns/send-message:TAG install -->
+              <!-- 환경변수로 이미지 경로 구성: IMAGE_REGISTRY / IMAGE_NAMESPACE / IMAGE_TAG -->
+              <to>
+                <image>${env.IMAGE_REGISTRY}/${env.IMAGE_NAMESPACE}/${project.artifactId}:${env.IMAGE_TAG}</image>
+              </to>
               <container>
                 <ports>
                   <port>8080</port>
