@@ -8,8 +8,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          # issuer-uri: https://issuer.example.com/realms/xxx
-          # jwk-set-uri: https://issuer.example.com/realms/xxx/protocol/openid-connect/certs
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:}
 
 slack:
   bot-token: ${SLACK_BOT_TOKEN:}
