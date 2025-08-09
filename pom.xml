@@ -11,6 +11,11 @@
     <spring-boot.version>3.3.0</spring-boot.version>
     <springdoc.version>2.6.0</springdoc.version>
     <resilience4j.version>2.2.0</resilience4j.version>
+    <!-- Jib 이미지 대상 파라미터: mvn -Ppublish -Dimage.registry=... -Dimage.namespace=... -Dimage.tag=... install -->
+    <image.registry></image.registry>
+    <image.namespace></image.namespace>
+    <image.tag>latest</image.tag>
+    <jib.allowInsecure>false</jib.allowInsecure>
   </properties>
 
   <dependencyManagement>
@@ -120,10 +125,11 @@
             <artifactId>jib-maven-plugin</artifactId>
             <version>3.4.0</version>
             <configuration>
-              <!-- 환경변수로 이미지 경로 구성: IMAGE_REGISTRY / IMAGE_NAMESPACE / IMAGE_TAG -->
+              <!-- settings.xml의 <servers> 자격 증명을 사용하며, -Dimage.* 프로퍼티로 대상 이미지를 지정합니다. -->
               <to>
-                <image>${env.IMAGE_REGISTRY}/${env.IMAGE_NAMESPACE}/${project.artifactId}:${env.IMAGE_TAG}</image>
+                <image>${image.registry}/${image.namespace}/${project.artifactId}:${image.tag}</image>
               </to>
+              <allowInsecureRegistries>${jib.allowInsecure}</allowInsecureRegistries>
               <container>
                 <ports>
                   <port>8080</port>
