@@ -1,0 +1,22 @@
+{
+  "realm": "send-message",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "send-message-client",
+      "publicClient": true,
+      "redirectUris": ["*"]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "msg:send",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true"
+      }
+    }
+  ],
+  "defaultDefaultClientScopes": ["web-origins", "roles", "profile", "email"],
+  "defaultOptionalClientScopes": ["msg:send"]
+} 
