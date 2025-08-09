@@ -6,19 +6,16 @@ UVICORN=$(VENV)/bin/uvicorn
 APP_NAME=send-message
 IMAGE_NAME=send-message:latest
 
-.PHONY: venv install run docker-build docker-run deploy compose-up compose-down compose-logs
+.PHONY: build test run docker-build docker-run compose-up compose-down compose-logs deploy publish
 
-# 로컬 venv는 유지하지만, 기본 워크플로우는 docker compose를 권장
-venv:
-	$(PYTHON) -m venv $(VENV)
-	@echo "Run 'source $(VENV)/bin/activate' to activate the venv"
+build:
+	mvn -q -DskipTests package
 
-install: venv
-	$(PIP) install --upgrade pip
-	$(PIP) install -r requirements.txt
+test:
+	mvn -q test
 
 run:
-	$(UVICORN) app.main:app --host 0.0.0.0 --port 8000 --reload
+	mvn -q spring-boot:run
 
 docker-build:
 	docker build -t $(IMAGE_NAME) .
@@ -35,5 +32,5 @@ compose-down:
 compose-logs:
 	docker compose logs -f
 
-deploy:
-	bash scripts/ship.sh 
+publish:
+	bash scripts/publish.sh 
